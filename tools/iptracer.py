@@ -1,35 +1,24 @@
-#!/usr/bin/python
-# -*- coding: utf_8 -*-
+import requests
+import json
+import os
 
-import mechanize, sys, re
-from BeautifulSoup import BeautifulSoup
+os.system("clear")
+print('''\033[1;35;40m
+  _____  _____    _______                           
+ |_   _||  __ \  |__   __|                          
+   | |  | |__) |    | | _ __  __ _   ___  ___  _ __ 
+   | |  |  ___/     | || '__|/ _` | / __|/ _ \| '__|
+  _| |_ | |         | || |  | (_| || (__|  __/| |   
+ |_____||_|         |_||_|   \__,_| \___|\___||_|\033[0m  
+                                
+                                                    
+            \033[1;40mTool Created By\033[0m\033[1;33;40m SKBROOT\033[0m
+''')
+while True:
+        user=input("\033[1;33;40mENTER TARGET IP : \033[0m \033[32;40m")
+        r =requests.get("http://ip-api.com/json/"+user)
+        j=json.loads(r.text)
+        for i in j:           
+                print(f"\033[1;33;40m {i} : \033[0m \033[32;40m{j[i]}\033[0m")
 
-if (len(sys.argv) == 1): quit("please input ip address or hostname")
-
-print "=============================="
-print "target:" + " ".join(sys.argv[1:])
-print "=============================="
-
-keyword = "+".join(sys.argv[1:])
-BASE_URL = "http://www.ip-adress.com/ip_tracer/" + keyword
-br = mechanize.Browser()
-br.set_handle_robots(False)
-br.addheaders = [('User-agent',
-                                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36')]
-
-soup = BeautifulSoup(br.open(BASE_URL).get_data())
-table = soup.find(id="ipinfo").find("table")
-
-lat = ""
-lng = ""
-if (not table): quit("not found")
-for tr in table.findAll("tr"): 
-  if 'latitude' in re.compile(r'<.*?>').sub('', unicode(tr.find("th"))):
-    lat = re.compile(r'<.*?>').sub('', re.compile(r'<(a|script) .*').sub('', unicode(tr.find("td")))).strip()
-  if 'longitude' in re.compile(r'<.*?>').sub('', unicode(tr.find("th"))):
-    lng = re.compile(r'<.*?>').sub('', re.compile(r'<(a|script) .*').sub('', unicode(tr.find("td")))).strip()
-  print re.compile(r'<.*?>').sub('', unicode(tr.find("th"))) + "" + re.compile(r'<.*?>').sub('', re.compile(r'<(a|script) .*').sub('', unicode(tr.find("td")))).strip()
-
-print ""
-print "https://www.google.co.jp/maps/place//@"+unicode(lat)+","+unicode(lng)+",15z"
-print ""
+        break            
